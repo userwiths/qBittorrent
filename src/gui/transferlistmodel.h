@@ -87,6 +87,7 @@ public:
         TR_INFOHASH_V2,
         TR_REANNOUNCE,
         TR_PRIVATE,
+        TR_DOWNLOAD_TIME,
 
         NB_COLUMNS
     };

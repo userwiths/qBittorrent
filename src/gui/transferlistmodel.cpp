@@ -169,6 +169,7 @@ QVariant TransferListModel::headerData(const int section, const Qt::Orientation 
             case TR_RATIO: return tr("Ratio", "Share ratio");
             case TR_POPULARITY: return tr("Popularity");
             case TR_ETA: return tr("ETA", "i.e: Estimated Time of Arrival / Time left");
+            case TR_DOWNLOAD_TIME: return tr("Download Time", "i.e: Time spent downloading the torrent.");
             case TR_CATEGORY: return tr("Category");
             case TR_TAGS: return tr("Tags");
             case TR_ADD_DATE: return tr("Added On", "Torrent was added to transfer list on 01/01/2010 08:00");
@@ -443,6 +444,8 @@ QString TransferListModel::displayValue(const BitTorrent::Torrent *torrent, cons
         return reannounceString(torrent->nextAnnounce());
     case TR_PRIVATE:
         return privateString(torrent->isPrivate(), torrent->hasMetadata());
+    case TR_DOWNLOAD_TIME:
+        return Utils::Misc::userFriendlyDuration(torrent->addedTime().msecsTo(torrent->completedTime()) / 1000);
     }
 
     return {};

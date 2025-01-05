@@ -201,6 +201,7 @@ int TransferListSortModel::compare(const QModelIndex &left, const QModelIndex &r
     case TransferListModel::TR_SIZE:
     case TransferListModel::TR_TIME_ELAPSED:
     case TransferListModel::TR_TOTAL_SIZE:
+    case TransferListModel::TR_DOWNLOAD_TIME:
         return customCompare(leftValue.toLongLong(), rightValue.toLongLong());
 
     case TransferListModel::TR_AVAILABILITY:
