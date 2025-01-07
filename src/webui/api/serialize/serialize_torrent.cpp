@@ -166,6 +166,7 @@ QVariantMap serialize(const BitTorrent::Torrent &torrent)
         {KEY_TORRENT_COMMENT, torrent.comment()},
         {KEY_TORRENT_PRIVATE, (torrent.hasMetadata() ? torrent.isPrivate() : QVariant())},
         {KEY_TORRENT_TOTAL_SIZE, torrent.totalSize()},
-        {KEY_TORRENT_HAS_METADATA, torrent.hasMetadata()}
+        {KEY_TORRENT_HAS_METADATA, torrent.hasMetadata()},
+        {KEY_TORRENT_DOWNLOAD_TIME, QLocale::c().toString(QTime(0,0).addMSecs(torrent.addedTime().msecsTo(torrent.isFinished() ? torrent.completedTime() : QDateTime::currentDateTime())))}
     };
 }
