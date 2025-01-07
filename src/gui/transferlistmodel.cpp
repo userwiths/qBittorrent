@@ -445,7 +445,9 @@ QString TransferListModel::displayValue(const BitTorrent::Torrent *torrent, cons
     case TR_PRIVATE:
         return privateString(torrent->isPrivate(), torrent->hasMetadata());
     case TR_DOWNLOAD_TIME:
-        return Utils::Misc::userFriendlyDuration(torrent->addedTime().msecsTo(torrent->completedTime()) / 1000);
+        QDateTime endDate = torrent->isFinished() ? torrent->completedTime() : QDateTime::currentDateTime();
+        auto milliSeconds = torrent->addedTime().msecsTo(endDate);
+        return QLocale::c().toString(QTime(0, 0).addMSecs(milliSeconds), u"hh'h 'mm'm 'ss's'");
     }
 
     return {};
