@@ -531,6 +531,10 @@ QVariant TransferListModel::internalValue(const BitTorrent::Torrent *torrent, co
         return torrent->nextAnnounce();
     case TR_PRIVATE:
         return (torrent->hasMetadata() ? torrent->isPrivate() : QVariant());
+    case TR_DOWNLOAD_TIME:
+        QDateTime endDate = torrent->isFinished() ? torrent->completedTime() : QDateTime::currentDateTime();
+        auto milliSeconds = torrent->addedTime().msecsTo(endDate);
+        return milliSeconds;
     }
 
     return {};
