@@ -1544,6 +1544,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
             js: ["scripts/prop-general.js", "scripts/prop-trackers.js", "scripts/prop-peers.js", "scripts/prop-webseeds.js", "scripts/prop-files.js"],
             onload: () => {
                 updatePropertiesPanel = () => {
+                    // Text depends on selected torrent, reload each time.
+                    window.qBittorrent.PropFiles.updateData();
                     switch (LocalPreferences.get("selected_properties_tab")) {
                         case "propGeneralLink":
                             window.qBittorrent.PropGeneral.updateData();
@@ -1558,7 +1560,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
                             window.qBittorrent.PropWebseeds.updateData();
                             break;
                         case "propFilesLink":
-                            window.qBittorrent.PropFiles.updateData();
+                            // We update regardless if its selected or not.
                             break;
                     }
                 };
