@@ -2187,6 +2187,10 @@ Use ';' pra dividir múltiplas entradas. Pode usar o wildcard '*'.</translation>
         <source>Content</source>
         <translation>Conteúdo</translation>
     </message>
+    <message>
+        <source>Content (%1/%2)</source>
+        <translation>Conteúdo (%1/%2)</translation>
+    </message>
 </context>
 <context>
     <name>PropertiesWidget</name>

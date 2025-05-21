@@ -2188,6 +2188,10 @@ Usar «;» para dividir entradas múltiples. Pode usar o comodín «*».</transl
         <source>Content</source>
         <translation>Contido</translation>
     </message>
+    <message>
+        <source>Content (%1/%2)</source>
+        <translation>Contido (%1/%2)</translation>
+    </message>
 </context>
 <context>
     <name>PropertiesWidget</name>

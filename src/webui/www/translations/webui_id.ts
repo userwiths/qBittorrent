@@ -2187,6 +2187,10 @@ Gunakan ';' untuk memisahkan banyak kata. Dapat menggunakan wildcard '*'.</trans
         <source>Content</source>
         <translation>Isi</translation>
     </message>
+    <message>
+        <source>Content (%1/%2)</source>
+        <translation>Isi (%1/%2)</translation>
+    </message>
 </context>
 <context>
     <name>PropertiesWidget</name>

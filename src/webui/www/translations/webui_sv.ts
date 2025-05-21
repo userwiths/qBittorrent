@@ -2187,6 +2187,10 @@ Använd ";" för att dela upp i flera poster. Du kan använda jokertecknet "*".<
         <source>Content</source>
         <translation>Innehåll</translation>
     </message>
+    <message>
+        <source>Content (%1/%2)</source>
+        <translation>Innehåll (%1/%2)</translation>
+    </message>
 </context>
 <context>
     <name>PropertiesWidget</name>

@@ -2187,6 +2187,10 @@ Gebruik ';' om meerdere items te splitsen. Jokerteken '*' kan gebruikt worden.</
         <source>Content</source>
         <translation>Inhoud</translation>
     </message>
+    <message>
+        <source>Content (%1/%2)</source>
+        <translation>Inhoud (%1/%2)</translation>
+    </message>
 </context>
 <context>
     <name>PropertiesWidget</name>

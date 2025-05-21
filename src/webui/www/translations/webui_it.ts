@@ -2192,6 +2192,10 @@ Controlla la posta in arrivo per confermare la ricezione</translation>
         <source>Content</source>
         <translation>Contenuto</translation>
     </message>
+    <message>
+        <source>Content (%1/%2)</source>
+        <translation>Contenuto (%1/%2)</translation>
+    </message>
 </context>
 <context>
     <name>PropertiesWidget</name>

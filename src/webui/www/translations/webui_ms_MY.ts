@@ -2187,6 +2187,10 @@ Guna ';' untuk asingkan masukan berbilang. Boleh guna kad liar '*'.</translation
         <source>Content</source>
         <translation>Kandungan</translation>
     </message>
+    <message>
+        <source>Content (%1/%2)</source>
+        <translation>Kandungan (%1/%2)</translation>
+    </message>
 </context>
 <context>
     <name>PropertiesWidget</name>

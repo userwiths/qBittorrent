@@ -2187,6 +2187,10 @@ Sử dụng ';' để chia nhiều mục nhập. Có thể sử dụng ký tự 
         <source>Content</source>
         <translation>Nội dung</translation>
     </message>
+    <message>
+        <source>Content (%1/%2)</source>
+        <translation>Nội dung (%1/%2)</translation>
+    </message>
 </context>
 <context>
     <name>PropertiesWidget</name>

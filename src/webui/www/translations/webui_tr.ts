@@ -2187,6 +2187,10 @@ sunucusu tarafından kullanılan etki alanı adlarına eklemelisiniz.
         <source>Content</source>
         <translation>İçerik</translation>
     </message>
+    <message>
+        <source>Content (%1/%2)</source>
+        <translation>İçerik (%1/%2)</translation>
+    </message>
 </context>
 <context>
     <name>PropertiesWidget</name>

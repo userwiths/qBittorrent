@@ -2180,8 +2180,8 @@ Use ';' to split multiple entries. Can use wildcard '*'.</source>
         <translation>منابع HTTP:</translation>
     </message>
     <message>
-        <source>Content</source>
-        <translation>محتوا</translation>
+        <source>Content (%1/%2)</source>
+        <translation>محتوا (%1/%2)</translation>
     </message>
 </context>
 <context>

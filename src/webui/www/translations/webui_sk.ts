@@ -2187,6 +2187,10 @@ Použite ';' pre oddelenie viacerých položiek. Môžete použiť masku '*'.</t
         <source>Content</source>
         <translation>Obsah</translation>
     </message>
+    <message>
+        <source>Content (%1/%2)</source>
+        <translation>Obsah (%1/%2)</translation>
+    </message>
 </context>
 <context>
     <name>PropertiesWidget</name>

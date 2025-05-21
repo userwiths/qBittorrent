@@ -2187,6 +2187,10 @@ Izmantojiet ';' lai atdalītu vairākus vārdus. Varat izmantot vietturi '*'.</t
         <source>Content</source>
         <translation>Saturs</translation>
     </message>
+    <message>
+        <source>Content (%1/%2)</source>
+        <translation>Saturs (%1/%2)</translation>
+    </message>
 </context>
 <context>
     <name>PropertiesWidget</name>

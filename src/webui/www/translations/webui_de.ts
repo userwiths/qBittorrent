@@ -2189,6 +2189,10 @@ Platzhalter '*' kann verwendet werden.</translation>
         <source>Content</source>
         <translation>Inhalt</translation>
     </message>
+    <message>
+        <source>Content (%1/%2)</source>
+        <translation>Inhalt (%1/%2)</translation>
+    </message>
 </context>
 <context>
     <name>PropertiesWidget</name>

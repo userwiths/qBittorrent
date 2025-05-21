@@ -2187,6 +2187,10 @@ Użyj ';' do rozdzielania wielu wpisów. Można użyć wieloznacznika '*'.</tran
         <source>Content</source>
         <translation>Zawartość</translation>
     </message>
+    <message>
+        <source>Content (%1/%2)</source>
+        <translation>Zawartość (%1/%2)</translation>
+    </message>
 </context>
 <context>
     <name>PropertiesWidget</name>

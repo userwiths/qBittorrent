@@ -2187,6 +2187,10 @@ Bruk ";" for å splitte flerfoldige oppføringer. Jokertegnet "*" kan brukes.</t
         <source>Content</source>
         <translation>Innhold</translation>
     </message>
+    <message>
+        <source>Content (%1/%2)</source>
+        <translation>Innhold (%1/%2)</translation>
+    </message>
 </context>
 <context>
     <name>PropertiesWidget</name>

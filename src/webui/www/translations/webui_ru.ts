@@ -2187,6 +2187,10 @@ Use ';' to split multiple entries. Can use wildcard '*'.</source>
         <source>Content</source>
         <translation>Файлы</translation>
     </message>
+    <message>
+        <source>Content (%1/%2)</source>
+        <translation>Файлы (%1/%2)</translation>
+    </message>
 </context>
 <context>
     <name>PropertiesWidget</name>

@@ -2187,6 +2187,10 @@ Koristite ';' za razdvajanje više unosa. Može koristiti zamjenski znak '*'.</t
         <source>Content</source>
         <translation>Sadržaj</translation>
     </message>
+    <message>
+        <source>Content (%1/%2)</source>
+        <translation>Sadržaj (%1/%2)</translation>
+    </message>
 </context>
 <context>
     <name>PropertiesWidget</name>

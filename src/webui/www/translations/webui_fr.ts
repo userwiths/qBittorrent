@@ -2186,6 +2186,10 @@ Utiliser ';' pour diviser plusieurs entrées. Le caractère générique '*' peut
         <source>Content</source>
         <translation>Contenu</translation>
     </message>
+    <message>
+        <source>Content (%1/%2)</source>
+        <translation>Contenu (%1/%2)</translation>
+    </message>
 </context>
 <context>
     <name>PropertiesWidget</name>

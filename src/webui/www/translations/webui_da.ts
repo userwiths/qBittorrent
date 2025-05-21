@@ -2187,6 +2187,10 @@ Brug ';' til af adskille flere indtastninger. Jokertegnet '*' kan bruges.</trans
         <source>Content</source>
         <translation>Indhold</translation>
     </message>
+    <message>
+        <source>Content (%1/%2)</source>
+        <translation>Indhold (%1/%2)</translation>
+    </message>
 </context>
 <context>
     <name>PropertiesWidget</name>
