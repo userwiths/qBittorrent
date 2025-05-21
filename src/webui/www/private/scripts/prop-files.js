@@ -304,14 +304,21 @@ window.qBittorrent.PropFiles ??= (() => {
     };
 
     let loadTorrentFilesDataTimer = -1;
+    const setContentPropertyText = (files) => {
+        const propElem = document.getElementById("propFilesLink");
+        if (propElem !== null) {
+            const propertyText = "QBT_TR(Content (%1/%2))QBT_TR[CONTEXT=PropertiesPanel]";
+            const completedFiles = files.filter((file) => {
+                return file.progress === 1;
+            });
+            propElem.firstElementChild.lastChild.textContent = propertyText.replace("%1", completedFiles.length).replace("%2", files.length);
+        }
+    };
+
     const loadTorrentFilesData = () => {
         if (document.hidden)
             return;
-        if (document.getElementById("propFiles").classList.contains("invisible")
-            || document.getElementById("propertiesPanel_collapseToggle").classList.contains("panel-expand")) {
-            // Tab changed, don't do anything
-            return;
-        }
+
         const new_hash = torrentsTable.getCurrentTorrentID();
         if (new_hash === "") {
             torrentFilesTable.clear();
@@ -349,6 +356,7 @@ window.qBittorrent.PropFiles ??= (() => {
                     handleNewTorrentFiles(files);
                     if (loadedNewTorrent)
                         torrentFilesTable.collapseAllNodes();
+                    setContentPropertyText(files);
                 }
             })
             .finally(() => {
