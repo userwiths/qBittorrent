@@ -2478,6 +2478,10 @@ Erabili ';' sarrera ugari banantzeko. '*' ordez-hizkia erabili daiteke.</transla
         <source>Content</source>
         <translation>Edukia</translation>
     </message>
+    <message>
+        <source>Content (%1/%2)</source>
+        <translation>Edukia (%1/%2)</translation>
+    </message>
 </context>
 <context>
     <name>PropertiesWidget</name>

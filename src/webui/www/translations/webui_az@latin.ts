@@ -2482,6 +2482,10 @@ serveri tərəfindən istifadə olunan domen adını göstərməlisiniz.
         <source>Content</source>
         <translation>Məzmunu</translation>
     </message>
+    <message>
+        <source>Content (%1/%2)</source>
+        <translation>Məzmunu (%1/%2)</translation>
+    </message>
 </context>
 <context>
     <name>PropertiesWidget</name>

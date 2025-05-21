@@ -2482,6 +2482,10 @@ Használja a ';' karaktert az elválasztásra, ha több is van. A '*' helyettes�
         <source>Content</source>
         <translation>Tartalom</translation>
     </message>
+    <message>
+        <source>Content (%1/%2)</source>
+        <translation>Tartalom (%1/%2)</translation>
+    </message>
 </context>
 <context>
     <name>PropertiesWidget</name>

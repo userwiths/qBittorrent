@@ -2483,6 +2483,10 @@ Useu ";" per separar les entrades. Podeu usar el comodí "*".</translation>
         <source>Content</source>
         <translation>Contingut</translation>
     </message>
+    <message>
+        <source>Content (%1/%2)</source>
+        <translation>Contingut (%1/%2)</translation>
+    </message>
 </context>
 <context>
     <name>PropertiesWidget</name>

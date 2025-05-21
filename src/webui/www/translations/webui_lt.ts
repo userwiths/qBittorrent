@@ -2472,6 +2472,10 @@ pakaitos simbolį "*".</translation>
         <source>Content</source>
         <translation>Failai</translation>
     </message>
+    <message>
+        <source>Content (%1/%2)</source>
+        <translation>Failai (%1/%2)</translation>
+    </message>
 </context>
 <context>
     <name>PropertiesWidget</name>

@@ -2470,6 +2470,10 @@ Uporabi ';' da razčleniš vnose. Lahko uporbiš nadomestni znak '*'.</translati
         <source>Content</source>
         <translation>Vsebina</translation>
     </message>
+    <message>
+        <source>Content (%1/%2)</source>
+        <translation>Vsebina (%1/%2)</translation>
+    </message>
 </context>
 <context>
     <name>PropertiesWidget</name>
