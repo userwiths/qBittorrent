@@ -449,7 +449,12 @@ QString TransferListModel::displayValue(const BitTorrent::Torrent *torrent, cons
     case TR_REANNOUNCE:
         return reannounceString(torrent->nextAnnounce());
     case TR_PERCENT_SELECTED:
-        return torrent->hasMetadata() ? (QString::number((static_cast<qreal>(torrent->wantedSize()) * 100) / torrent->totalSize(), 'f', 2) + u'%') : tr("N/A");
+        {
+            const qint64 totalSize = torrent->totalSize();
+            if (!torrent->hasMetadata() || (totalSize <= 0))
+                return tr("N/A");
+            return QString::number((static_cast<qreal>(torrent->wantedSize()) * 100) / totalSize, 'f', 2) + u'%';
+        }
     case TR_PRIVATE:
         return privateString(torrent->isPrivate(), torrent->hasMetadata());
     }
@@ -538,7 +543,12 @@ QVariant TransferListModel::internalValue(const BitTorrent::Torrent *torrent, co
     case TR_PRIVATE:
         return (torrent->hasMetadata() ? torrent->isPrivate() : QVariant());
     case TR_PERCENT_SELECTED:
-        return torrent->hasMetadata() ? ((static_cast<qreal>(torrent->wantedSize()) * 100) / torrent->totalSize()) : 0;
+        {
+            const qint64 totalSize = torrent->totalSize();
+            if (!torrent->hasMetadata() || (totalSize <= 0))
+                return 0;
+            return (static_cast<qreal>(torrent->wantedSize()) * 100) / totalSize;
+        }
     }
 
     return {};

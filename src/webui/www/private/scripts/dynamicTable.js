@@ -1628,16 +1628,16 @@ window.qBittorrent.DynamicTable ??= (() => {
             // percent_selected
             this.columns["percent_selected"].updateTd = function(td, row) {
                 const hasMetadata = this.getRowValue(row, 0);
-                if (hasMetadata === false) {
-                    td.textContent = "QBT_TR(N/A)QBT_TR[CONTEXT=TrackerListWidget]";
-                    td.title = "QBT_TR(N/A)QBT_TR[CONTEXT=TrackerListWidget]";
+                if (!hasMetadata) {
+                    td.textContent = "QBT_TR(N/A)QBT_TR[CONTEXT=TransferListDelegate]";
+                    td.title = "QBT_TR(N/A)QBT_TR[CONTEXT=TransferListDelegate]";
                     return;
                 }
                 const size = this.getRowValue(row, 1);
                 const totalSize = this.getRowValue(row, 2);
                 if (totalSize <= 0) {
-                    td.textContent = "QBT_TR(N/A)QBT_TR[CONTEXT=TrackerListWidget]";
-                    td.title = "QBT_TR(N/A)QBT_TR[CONTEXT=TrackerListWidget]";
+                    td.textContent = "QBT_TR(N/A)QBT_TR[CONTEXT=TransferListDelegate]";
+                    td.title = "QBT_TR(N/A)QBT_TR[CONTEXT=TransferListDelegate]";
                     return;
                 }
                 const percent = (size / totalSize) * 100;
@@ -1650,9 +1650,9 @@ window.qBittorrent.DynamicTable ??= (() => {
                 const hasMetadata1 = this.getRowValue(row1, 0);
                 const hasMetadata2 = this.getRowValue(row2, 0);
 
-                if ((hasMetadata1 === true) && (hasMetadata2 === false))
+                if (hasMetadata1 && !hasMetadata2)
                     return -1;
-                if ((hasMetadata1 === false) && (hasMetadata2 === true))
+                if (!hasMetadata1 && hasMetadata2)
                     return 1;
 
                 const size1 = this.getRowValue(row1, 1);
