@@ -47,6 +47,7 @@ window.qBittorrent.PropFiles ??= (() => {
     const TriState = window.qBittorrent.FileTree.TriState;
     let is_seed = true;
     let current_hash = "";
+    const BY_SHOWN_ORDER = -2;
 
     const normalizePriority = (priority) => {
         switch (priority) {
@@ -105,7 +106,7 @@ window.qBittorrent.PropFiles ??= (() => {
 
         const rows = getAllChildren(id, fileId);
 
-        setFilePriority(rows.rowIds, rows.fileIds, priority);
+        setFilePriority(rows.fileIds, priority);
         updateGlobalCheckbox();
     };
 
@@ -117,7 +118,7 @@ window.qBittorrent.PropFiles ??= (() => {
 
         const rows = getAllChildren(id, fileId);
 
-        setFilePriority(rows.rowIds, rows.fileIds, priority);
+        setFilePriority(rows.fileIds, priority);
         updateGlobalCheckbox();
     };
 
@@ -241,7 +242,7 @@ window.qBittorrent.PropFiles ??= (() => {
         }
 
         if (rowIds.length > 0)
-            setFilePriority(rowIds, fileIds, priority);
+            setFilePriority(fileIds, priority);
     };
 
     const updateGlobalCheckbox = () => {
@@ -271,7 +272,7 @@ window.qBittorrent.PropFiles ??= (() => {
         checkbox.indeterminate = true;
     };
 
-    const setFilePriority = (ids, fileIds, priority) => {
+    const setFilePriority = (fileIds, priority) => {
         if (current_hash === "")
             return;
 
@@ -292,15 +293,6 @@ window.qBittorrent.PropFiles ??= (() => {
 
                 loadTorrentFilesDataTimer = loadTorrentFilesData.delay(1000);
             });
-
-        const ignore = (priority === FilePriority.Ignored);
-        ids.forEach((id) => {
-            torrentFilesTable.setIgnored(id, ignore);
-
-            const combobox = document.getElementById(`comboPrio${id}`);
-            if (combobox !== null)
-                selectComboboxPriority(combobox, priority);
-        });
     };
 
     let loadTorrentFilesDataTimer = -1;
@@ -459,44 +451,40 @@ window.qBittorrent.PropFiles ??= (() => {
         if (selectedRows.length === 0)
             return;
 
-        const rowIds = [];
         const fileIds = [];
+        const fillInChildren = (rowId, fileId) => {
+            const children = getAllChildren(rowId, fileId);
+            children.fileIds.forEach((childFileId, index) => {
+                if (fileId === -1) {
+                    fillInChildren(children.rowIds[index], childFileId);
+                    return;
+                }
+                if (!fileIds.includes(childFileId))
+                    fileIds.push(childFileId);
+            });
+        };
+
         selectedRows.forEach((rowId) => {
-            rowIds.push(rowId);
-            fileIds.push(torrentFilesTable.getRowFileId(rowId));
+            const fileId = torrentFilesTable.getRowFileId(rowId);
+            if (fileId !== -1)
+                fileIds.push(fileId);
+            fillInChildren(rowId, fileId);
         });
 
-        const uniqueRowIds = {};
-        const uniqueFileIds = {};
-        for (let i = 0; i < rowIds.length; ++i) {
-            const rows = getAllChildren(rowIds[i], fileIds[i]);
-            rows.rowIds.forEach((rowId) => {
-                uniqueRowIds[rowId] = true;
-            });
-            rows.fileIds.forEach((fileId) => {
-                uniqueFileIds[fileId] = true;
-            });
-        }
-
         // Will be used both in general case and ByShownOrder case
-        const filesLen = Object.keys(uniqueFileIds).length;
         const priorityList = {};
         Object.values(FilePriority).forEach((p) => {
             priorityList[p] = [];
         });
-        const priorityGroupSize = Math.max(Math.floor(filesLen / 3), 1);
-        const uniqueFileKeys = Object.keys(uniqueFileIds);
-        const uniqueRowKeys = Object.keys(uniqueRowIds);
+        const groupsNum = 3;
+        const priorityGroupSize = Math.max(Math.floor(fileIds.length / groupsNum), 1);
 
         // Will be altered only if we select ByShownOrder, use whatever is passed otherwise
         let priorityGroup = priority;
         let fileId = 0;
-        let rowId = 0;
-        for (let i = 0; i < filesLen; ++i) {
-            fileId = uniqueFileKeys[i];
-            rowId = uniqueRowKeys[i];
-            // Calculate priority based on order
-            if (priority === FilePriority.ByShownOrder) {
+        for (let i = 0; i < fileIds.length; ++i) {
+            fileId = fileIds[i];
+            if (priority === BY_SHOWN_ORDER) {
                 switch (Math.floor(i / priorityGroupSize)) {
                     case 0:
                         priorityGroup = FilePriority.Maximum;
@@ -510,19 +498,14 @@ window.qBittorrent.PropFiles ??= (() => {
                         break;
                 }
             }
-            // Or if we use one of the simpler priorities, just push in the same group
-            priorityList[priorityGroup].push({
-                fileId: fileId,
-                rowId: rowId
-            });
+            priorityList[priorityGroup].push(fileId);
         }
 
-        Object.entries(priorityList).forEach(([groupPriority, groupedFileRowPair]) => {
-            if (groupedFileRowPair.length === 0)
+        Object.entries(priorityList).forEach(([groupPriority, groupedFiles]) => {
+            if (groupedFiles.length === 0)
                 return;
             setFilePriority(
-                groupedFileRowPair.map(pair => pair.rowId),
-                groupedFileRowPair.map(pair => pair.fileId),
+                groupedFiles,
                 groupPriority
             );
         });
@@ -602,7 +585,7 @@ window.qBittorrent.PropFiles ??= (() => {
                 filesPriorityMenuClicked(FilePriority.Maximum);
             },
             FilePrioByShownOrder: (element, ref) => {
-                filesPriorityMenuClicked(FilePriority.ByShownOrder);
+                filesPriorityMenuClicked(BY_SHOWN_ORDER);
             }
         },
         offsets: {
