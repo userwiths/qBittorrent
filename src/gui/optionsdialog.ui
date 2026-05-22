@@ -3813,6 +3813,44 @@ Specify an IPv4 or IPv6 address. You can specify &quot;0.0.0.0&quot; for any IPv
                 </layout>
                </item>
                <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_https">
+                  <item>
+                    <widget class="QLabel" name="lblWebUISecureAddress">
+                      <property name="text">
+                        <string>HTTPS IP address:</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item>
+                    <widget class="QLineEdit" name="textWebUISecureAddress">
+                      <property name="toolTip">
+                        <string>IP address that the Web UI will bind to for HTTPS connections.</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item>
+                    <widget class="QLabel" name="lblWebUISecurePort">
+                      <property name="text">
+                        <string>HTTPS Port:</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item >
+                    <widget class="QSpinBox" name="spinWebUISecurePort">
+                      <property name="minimum">
+                        <number>1</number>
+                      </property>
+                      <property name="maximum">
+                        <number>65535</number>
+                      </property>
+                      <property name="value">
+                        <number>8443</number>
+                      </property>
+                    </widget>
+                  </item>
+                </layout>
+               </item>
+               <item>
                 <widget class="QCheckBox" name="checkWebUIUPnP">
                  <property name="text">
                   <string>Use UPnP / NAT-PMP to forward the port from my router</string>

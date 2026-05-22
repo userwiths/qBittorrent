@@ -890,6 +890,34 @@ void Preferences::setWebUIPort(const quint16 port)
     setValue(u"WebUI/Port"_s, static_cast<int>(port));
 }
 
+QString Preferences::getWebUISecureAddress() const
+{
+    return value<QString>(u"WebUI/HTTPS/Address"_s, u"*"_s).trimmed();
+}
+
+void Preferences::setWebUISecureAddress(const QString &addr)
+{
+    if (addr == getWebUISecureAddress())
+        return;
+
+    setValue(u"WebUI/HTTPS/Address"_s, addr.trimmed());
+}
+
+quint16 Preferences::getWebUISecurePort() const
+{
+    return value<quint16>(u"WebUI/HTTPS/Port"_s, 8443);
+}
+
+void Preferences::setWebUISecurePort(const quint16 port)
+{
+    if (port == getWebUISecurePort())
+        return;
+    if (port == getWebUIPort())
+        return;
+
+    setValue(u"WebUI/HTTPS/Port"_s, static_cast<int>(port));
+}
+
 bool Preferences::useUPnPForWebUIPort() const
 {
     return value(u"WebUI/UseUPnP"_s, false);

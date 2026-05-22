@@ -49,6 +49,7 @@ namespace Http
     {
         QString version;
         QString method;
+        QByteArray target;
         QString path;
         HeaderMap headers;
         QHash<QString, QByteArray> query;

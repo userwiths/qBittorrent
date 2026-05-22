@@ -31,6 +31,7 @@
 #include "connection.h"
 
 #include <QMetaObject>
+#include <QSslSocket>
 #include <QTcpSocket>
 
 #include "constants.h"
@@ -126,7 +127,11 @@ bool Http::Connection::processRequest()
             m_receivedData.remove(0, result.frameSize);
 #endif
 
-            const Environment env {m_socket->localAddress(), m_socket->localPort(), m_socket->peerAddress(), m_socket->peerPort()};
+            const auto *sslSocket = qobject_cast<QSslSocket *>(m_socket);
+            const Environment env {
+                m_socket->localAddress(), m_socket->localPort(), m_socket->peerAddress(), m_socket->peerPort()
+                , (sslSocket && sslSocket->isEncrypted())
+            };
 
             m_responseWriter.prepare(result.request);
             m_requestHandler->processRequest(result.request, env, m_responseWriter);

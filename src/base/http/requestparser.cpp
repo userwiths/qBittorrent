@@ -223,6 +223,7 @@ bool RequestParser::parseRequestLine(const QByteArrayView line)
 
     // Request Target
     const QByteArrayView url = parts[1];
+    m_request.target = url.toByteArray();
     const qsizetype sepPos = url.indexOf('?');
     const QByteArrayView pathComponent = ((sepPos == -1) ? url : url.first(sepPos));
 

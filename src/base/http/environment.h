@@ -40,5 +40,6 @@ namespace Http
 
         QHostAddress clientAddress;
         quint16 clientPort = 0;
+        bool isHttps = false;
     };
 }

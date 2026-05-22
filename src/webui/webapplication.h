@@ -92,6 +92,7 @@ public:
 
     void setUsername(const QString &username);
     void setPasswordHash(const QByteArray &passwordHash);
+    void setHttpsRedirectEnabled(bool enabled);
 
 private:
     QString clientId() const;
@@ -276,6 +277,7 @@ private:
     bool m_isSecureCookieEnabled = true;
     bool m_isHostHeaderValidationEnabled = true;
     bool m_isHttpsEnabled = false;
+    bool m_isHttpsRedirectEnabled = false;
 
     // Reverse proxy
     bool m_isReverseProxySupportEnabled = false;

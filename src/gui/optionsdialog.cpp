@@ -1443,6 +1443,8 @@ void OptionsDialog::loadWebUITabOptions()
     m_ui->spinWebUIPort->setValue(pref->getWebUIPort());
     m_ui->checkWebUIUPnP->setChecked(pref->useUPnPForWebUIPort());
     m_ui->checkWebUIHttps->setChecked(pref->isWebUIHttpsEnabled());
+    m_ui->textWebUISecureAddress->setText(pref->getWebUISecureAddress());
+    m_ui->spinWebUISecurePort->setValue(pref->getWebUISecurePort());
     webUIHttpsCertChanged(pref->getWebUIHttpsCertificatePath());
     webUIHttpsKeyChanged(pref->getWebUIHttpsKeyPath());
     m_ui->textWebUIUsername->setText(pref->getWebUIUsername());
@@ -1486,6 +1488,8 @@ void OptionsDialog::loadWebUITabOptions()
     connect(m_ui->checkWebUI, &QGroupBox::toggled, this, &ThisType::enableApplyButton);
     connect(m_ui->textWebUIAddress, &QLineEdit::textChanged, this, &ThisType::enableApplyButton);
     connect(m_ui->spinWebUIPort, qSpinBoxValueChanged, this, &ThisType::enableApplyButton);
+    connect(m_ui->textWebUISecureAddress, &QLineEdit::textChanged, this, &ThisType::enableApplyButton);
+    connect(m_ui->spinWebUISecurePort, qSpinBoxValueChanged, this, &ThisType::enableApplyButton);
     connect(m_ui->checkWebUIUPnP, &QAbstractButton::toggled, this, &ThisType::enableApplyButton);
     connect(m_ui->checkWebUIHttps, &QGroupBox::toggled, this, &ThisType::enableApplyButton);
     connect(m_ui->textWebUIHttpsCert, &FileSystemPathLineEdit::selectedPathChanged, this, &ThisType::enableApplyButton);
@@ -1538,6 +1542,8 @@ void OptionsDialog::saveWebUITabOptions() const
     pref->setWebUIEnabled(webUIEnabled);
     pref->setWebUIAddress(m_ui->textWebUIAddress->text());
     pref->setWebUIPort(m_ui->spinWebUIPort->value());
+    pref->setWebUISecureAddress(m_ui->textWebUISecureAddress->text());
+    pref->setWebUISecurePort(m_ui->spinWebUISecurePort->value());
     pref->setUPnPForWebUIPort(m_ui->checkWebUIUPnP->isChecked());
     pref->setWebUIHttpsEnabled(m_ui->checkWebUIHttps->isChecked());
     pref->setWebUIHttpsCertificatePath(m_ui->textWebUIHttpsCert->selectedPath());

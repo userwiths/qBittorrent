@@ -57,6 +57,7 @@ void WebUI::configure()
 
     m_isEnabled = pref->isWebUIEnabled();
     const QString username = pref->getWebUIUsername();
+    const bool isHttpsEnabled = pref->isWebUIHttpsEnabled();
     QByteArray passwordHash = m_tempPasswordHash;
     if (const QByteArray prefPasswordHash = pref->getWebUIPassword(); !prefPasswordHash.isEmpty())
     {
@@ -74,38 +75,64 @@ void WebUI::configure()
     if (m_isEnabled && !m_isErrored)
     {
         const quint16 port = pref->getWebUIPort();
+        const quint16 httpsPort = pref->getWebUISecurePort();
 
         // Port forwarding
         auto *portForwarder = Net::PortForwarder::instance();
         if (pref->useUPnPForWebUIPort())
         {
             portForwarder->setPorts(portForwardingProfile, {port});
+            if (isHttpsEnabled)
+                portForwarder->setPorts(portForwardingProfile, {port, httpsPort});
         }
         else
         {
             portForwarder->removePorts(portForwardingProfile);
+            if (isHttpsEnabled)
+                portForwarder->removePorts(portForwardingProfile);
         }
 
         // http server
-        const QString serverAddressString = pref->getWebUIAddress();
-        const auto serverAddress = ((serverAddressString == u"*") || serverAddressString.isEmpty())
-            ? QHostAddress::Any : QHostAddress(serverAddressString);
+        const QString httpServerAddressString = pref->getWebUIAddress();
+        const auto httpServerAddress = ((httpServerAddressString == u"*") || httpServerAddressString.isEmpty())
+            ? QHostAddress::Any : QHostAddress(httpServerAddressString);
+        // https server
+        const QString httpsServerAddressString = pref->getWebUISecureAddress();
+        const auto httpsServerAddress = ((httpsServerAddressString == u"*") || httpsServerAddressString.isEmpty())
+            ? QHostAddress::Any : QHostAddress(httpsServerAddressString);
+
+        if (!m_webapp)
+        {
+            m_webapp = new WebApplication(app(), this);
+        }
+        m_webapp->setHttpsRedirectEnabled(false);
 
         if (!m_httpServer)
         {
-            m_webapp = new WebApplication(app(), this);
             m_httpServer = new Http::Server(m_webapp, this);
         }
         else
         {
-            if ((m_httpServer->serverAddress() != serverAddress) || (m_httpServer->serverPort() != port))
+            if ((m_httpServer->serverAddress() != httpServerAddress) || (m_httpServer->serverPort() != port))
                 m_httpServer->close();
+        }
+
+        if (isHttpsEnabled)
+        {
+            if (!m_httpsServer)
+                m_httpsServer = new Http::Server(m_webapp, this);
+            else if ((m_httpsServer->serverAddress() != httpsServerAddress) || (m_httpsServer->serverPort() != httpsPort))
+                m_httpsServer->close();
+        }
+        else
+        {
+            delete m_httpsServer;
         }
 
         m_webapp->setUsername(username);
         m_webapp->setPasswordHash(passwordHash);
 
-        if (pref->isWebUIHttpsEnabled())
+        if (isHttpsEnabled)
         {
             const auto readData = [](const Path &path) -> QByteArray
             {
@@ -115,28 +142,45 @@ void WebUI::configure()
             const QByteArray cert = readData(pref->getWebUIHttpsCertificatePath());
             const QByteArray key = readData(pref->getWebUIHttpsKeyPath());
 
-            const bool success = m_httpServer->setupHttps(cert, key);
+            const bool success = m_httpsServer->setupHttps(cert, key);
             if (success)
+            {
                 LogMsg(tr("WebUI: HTTPS setup successful"));
+                if (!m_httpsServer->isListening())
+                {
+                    const bool success = m_httpsServer->listen(httpsServerAddress, httpsPort);
+                    if (success)
+                    {
+                        LogMsg(tr("WebUI: Now listening on IP: %1, port: %2").arg(httpsServerAddressString).arg(httpsPort));
+                    }
+                    else
+                    {
+                        setError(tr("Unable to bind to IP: %1, port: %2. Reason: %3")
+                                .arg(httpsServerAddressString).arg(httpsPort).arg(m_httpsServer->errorString()));
+                    }
+                }
+                m_webapp->setHttpsRedirectEnabled(m_httpsServer->isListening() && m_httpsServer->isHttps());
+            }
             else
+            {
+                m_httpsServer->close();
                 LogMsg(tr("WebUI: HTTPS setup failed, fallback to HTTP"), Log::CRITICAL);
+            }
         }
-        else
-        {
-            m_httpServer->disableHttps();
-        }
+
+        m_httpServer->disableHttps();
 
         if (!m_httpServer->isListening())
         {
-            const bool success = m_httpServer->listen(serverAddress, port);
+            const bool success = m_httpServer->listen(httpServerAddress, port);
             if (success)
             {
-                LogMsg(tr("WebUI: Now listening on IP: %1, port: %2").arg(serverAddressString).arg(port));
+                LogMsg(tr("WebUI: Now listening on IP: %1, port: %2").arg(httpServerAddressString).arg(port));
             }
             else
             {
                 setError(tr("Unable to bind to IP: %1, port: %2. Reason: %3")
-                        .arg(serverAddressString).arg(port).arg(m_httpServer->errorString()));
+                        .arg(httpServerAddressString).arg(port).arg(m_httpServer->errorString()));
             }
         }
 
@@ -158,6 +202,7 @@ void WebUI::configure()
         Net::PortForwarder::instance()->removePorts(portForwardingProfile);
 
         delete m_httpServer;
+        delete m_httpsServer;
         delete m_webapp;
         delete m_dnsUpdater;
     }
@@ -192,8 +237,8 @@ QString WebUI::errorMessage() const
 
 bool WebUI::isHttps() const
 {
-    if (!m_httpServer) return false;
-    return m_httpServer->isHttps();
+    if (!m_httpsServer) return false;
+    return m_httpsServer->isHttps();
 }
 
 QHostAddress WebUI::hostAddress() const

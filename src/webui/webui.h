@@ -74,6 +74,7 @@ private:
     bool m_isErrored = false;
     QString m_errorMsg;
     QPointer<Http::Server> m_httpServer;
+    QPointer<Http::Server> m_httpsServer;
     QPointer<Net::DNSUpdater> m_dnsUpdater;
     QPointer<WebApplication> m_webapp;
 

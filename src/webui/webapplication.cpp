@@ -348,6 +348,11 @@ void WebApplication::setPasswordHash(const QByteArray &passwordHash)
     m_passwordHash = passwordHash;
 }
 
+void WebApplication::setHttpsRedirectEnabled(const bool enabled)
+{
+    m_isHttpsRedirectEnabled = enabled;
+}
+
 void WebApplication::processAPIRequest(const QString &endpoint, const Http::HeaderMap &commonHeaders, Http::ResponseWriter &responseWriter)
 {
     const auto [scope, action] = parseAPIEndpoint(endpoint);
@@ -719,12 +724,37 @@ void WebApplication::processRequest(const Http::Request &request, const Http::En
     m_env = env;
     m_cookieBasedSessionStateChange = SessionStateChange::None;
 
+    const Preferences *const pref = Preferences::instance();
     const QString authHeader = m_request.headers.value(Http::HEADER_AUTHORIZATION);
     const auto [authScheme, authData] = parseAuthorizationHeader(authHeader);
     const QString apiKeyHeader = m_request.headers.value(Http::HEADER_X_API_KEY);
     const bool isUsingApiKey = !apiKeyHeader.isEmpty() || (authScheme.compare(BEARER_AUTH, Qt::CaseInsensitive) == 0);
 
     Http::HeaderMap commonHeaders = m_prebuiltHeaders;
+
+    const bool isTrustedReverseProxy = m_isReverseProxySupportEnabled
+        && Utils::Net::isIPInSubnets(m_env.clientAddress, m_trustedReverseProxyList);
+    const QString hostHeader = m_request.headers.value(Http::HEADER_HOST);
+    if (m_isHttpsRedirectEnabled && !m_env.isHttps && (m_env.localPort == pref->getWebUIPort())
+        && !isTrustedReverseProxy && request.target.startsWith('/')
+        && validateHostHeader())
+    {
+        const QUrl requestUrl = urlFromHostHeader(hostHeader);
+        QUrl redirectUrl;
+        redirectUrl.setScheme(u"https"_s);
+        redirectUrl.setHost(requestUrl.host());
+        redirectUrl.setPort(pref->getWebUISecurePort());
+        const QByteArray authority = redirectUrl.toEncoded(QUrl::RemovePath | QUrl::RemoveQuery | QUrl::RemoveFragment);
+        QByteArray encodedUrl = authority;
+        encodedUrl.append(request.target);
+        redirectUrl = QUrl::fromEncoded(encodedUrl);
+        if (redirectUrl.isValid())
+        {
+            commonHeaders.insert(Http::HEADER_LOCATION, redirectUrl.toString(QUrl::FullyEncoded));
+            responseWriter.setResponse({.status = {.code = 307}, .headers = commonHeaders});
+            return;
+        }
+    }
 
     try
     {
