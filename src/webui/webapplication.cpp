@@ -681,11 +681,26 @@ void WebApplication::processRequest(const Http::Request &request, const Http::En
     m_env = env;
     m_sessionStateChange = SessionStateChange::None;
 
+    const Preferences *const pref = Preferences::instance();
     const QString authHeader = m_request.headers.value(Http::HEADER_AUTHORIZATION);
     const auto [authScheme, authData] = parseAuthorizationHeader(authHeader);
     const bool isUsingApiKey = (authScheme.compare(BEARER_AUTH, Qt::CaseInsensitive) == 0);
 
     Http::HeaderMap commonHeaders = m_prebuiltHeaders;
+
+    const quint16 webUiPort = pref->getWebUIPort();
+    const quint16 webUiSecurePort = pref->getWebUIHttpsPort();
+    const QString webUiAddress = pref->getWebUIAddress();
+    const QString webUiSecureAddress = pref->getWebUIHttpsAddress();
+    if(m_isHttpsEnabled) {
+        if (m_request.headers.value(Http::HEADER_HOST).startsWith(webUiAddress + u":" + QString::number(webUiPort)))
+        {
+            qWarning("Insecure request blocked. Origin: %s", qUtf8Printable(m_request.headers.value(Http::HEADER_ORIGIN)));
+            commonHeaders.insert(Http::HEADER_LOCATION, u"https://" + urlFromHostHeader(m_request.headers.value(Http::HEADER_HOST)).host() + u":" + QString::number(webUiSecurePort) + request.path);
+            responseWriter.setResponse({.status = {.code = 301}, .headers = commonHeaders});
+            return;
+        }
+    }
 
     try
     {

@@ -185,6 +185,10 @@ public:
     void setWebUIAddress(const QString &addr);
     quint16 getWebUIPort() const;
     void setWebUIPort(quint16 port);
+    QString getWebUIHttpsAddress() const;
+    void setWebUIHttpsAddress(const QString &addr);
+    quint16 getWebUIHttpsPort() const;
+    void setWebUIHttpsPort(quint16 port);
     bool useUPnPForWebUIPort() const;
     void setUPnPForWebUIPort(bool enabled);
 
